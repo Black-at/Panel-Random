@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Trolling - Informations Fictives</title>
+  <style>
+    /* Style global */
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      font-family: 'Courier New', Courier, monospace;
+      overflow: hidden;
+    }
+
+    /* Fond animé */
+    .background {
+      background-image: url('https://media.discordapp.net/attachments/1324789971806191646/1353381568596545616/017cf4d7d7200e2b9f2bd5f731c17e0c.gif?ex=67e1724e&is=67e020ce&hm=be28c7824ee4a333e7e08dfad43a98fd276b8b28a09051f1423b39f0e62222bd');
+      background-size: cover;
+      background-position: center;
+      height: 100%;
+      position: absolute;
+      width: 100%;
+      z-index: -1;
+      transition: background 0.5s ease-in-out;
+    }
+
+    /* Centre du formulaire */
+    .form-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      position: relative;
+    }
+
+    /* Conteneur avec flou */
+    .form-box {
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 20px;
+      padding: 30px;
+      backdrop-filter: blur(10px);
+      text-align: center;
+      width: 300px;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    /* Titres et textes */
+    h1 {
+      color: white;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    /* Champs de saisie */
+    input[type="email"] {
+      width: 80%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #fff;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    /* Bouton rouge */
+    .submit-btn {
+      background-color: red;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+
+    /* Effet sur le bouton */
+    .submit-btn:hover {
+      background-color: #e60000;
+      transform: scale(1.1);
+    }
+
+    /* Fenêtre d'information sans contour */
+    .info-window {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      width: 80%;
+      height: 50%;
+      border-radius: 10px;
+      color: white;
+      display: none;
+      font-family: 'Courier New', Courier, monospace;
+      overflow: hidden;
+      transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    }
+
+    .info-window h2 {
+      margin-bottom: 20px;
+    }
+
+    .info-window p {
+      margin: 5px 0;
+      font-size: 18px;
+    }
+
+    .close-btn {
+      background: red;
+      padding: 10px 20px;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-top: 20px;
+      display: block;
+      width: 100%;
+    }
+
+  </style>
+</head>
+<body>
+  <!-- Fond animé -->
+  <div class="background"></div>
+
+  <!-- Formulaire centré -->
+  <div class="form-container">
+    <div class="form-box">
+      <h1>Entrez votre email</h1>
+      <input type="email" placeholder="Votre email ici" id="email-input" />
+      <br />
+      <button class="submit-btn" onclick="showInfoWindow()">Obtenir ces infos</button>
+    </div>
+  </div>
+
+  <!-- Fenêtre d'information -->
+  <div class="info-window" id="info-window">
+    <h2>Informations Système</h2>
+    <p><strong>Nom d'utilisateur :</strong> <span id="username">Loading...</span></p>
+    <p><strong>IP:</strong> <span id="ip">Loading...</span></p>
+    <p><strong>Localisation :</strong> <span id="location">Loading...</span></p>
+    <p><strong>Dernière connexion :</strong> <span id="last-connection">Loading...</span></p>
+    <p><strong>Dispositif utilisé :</strong> <span id="device">Loading...</span></p>
+    <button class="close-btn" onclick="closeInfoWindow()">Fermer</button>
+  </div>
+
+  <script>
+    // Fonction pour générer des données réalistes
+    function generateRandomData() {
+      const usernames = ['MaximeLeblanc', 'AmandineLeroy', 'JulienDupuis', 'SophieMuller'];
+      const ips = ['192.168.1.102', '192.168.0.45', '192.168.2.34', '10.0.0.13'];
+      const locations = ['Paris, France', 'Marseille, France', 'Lyon, France', 'Toulouse, France'];
+      const devices = ['Windows 10 - Firefox', 'MacOS - Safari', 'Linux Ubuntu - Chrome', 'Android - Chrome'];
+      const lastConnections = ['22 mars 2025', '15 mars 2025', '1er avril 2025', '5 février 2025'];
+
+      // Retourne un objet avec des valeurs aléatoires
+      return {
+        username: usernames[Math.floor(Math.random() * usernames.length)],
+        ip: ips[Math.floor(Math.random() * ips.length)],
+        location: locations[Math.floor(Math.random() * locations.length)],
+        device: devices[Math.floor(Math.random() * devices.length)],
+        lastConnection: lastConnections[Math.floor(Math.random() * lastConnections.length)],
+      };
+    }
+
+    // Fonction pour afficher la fenêtre avec les informations aléatoires
+    function showInfoWindow() {
+      const randomData = generateRandomData();
+
+      // Met à jour les éléments de la fenêtre avec des données réalistes
+      document.getElementById('username').textContent = randomData.username;
+      document.getElementById('ip').textContent = randomData.ip;
+      document.getElementById('location').textContent = randomData.location;
+      document.getElementById('device').textContent = randomData.device;
+      document.getElementById('last-connection').textContent = randomData.lastConnection;
+
+      // Affiche la fenêtre avec animation
+      const infoWindow = document.getElementById('info-window');
+      infoWindow.style.display = 'block';
+      setTimeout(() => {
+        infoWindow.style.transform = 'translate(-50%, -50%) scale(1)';
+        infoWindow.style.opacity = '1';
+      }, 50);
+
+      // Applique un effet de flou sur le fond
+      document.querySelector('.background').style.filter = 'blur(5px)';
+    }
+
+    // Fonction pour fermer la fenêtre d'information
+    function closeInfoWindow() {
+      // Cache la fenêtre avec animation
+      const infoWindow = document.getElementById('info-window');
+      infoWindow.style.transform = 'translate(-50%, -50%) scale(0)';
+      infoWindow.style.opacity = '0';
+
+      // Enlève le flou sur le fond après l'animation
+      setTimeout(() => {
+        infoWindow.style.display = 'none';
+        document.querySelector('.background').style.filter = 'none';
+      }, 500);
+    }
+  </script>
+</body>
+</html>
